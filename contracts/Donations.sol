@@ -7,7 +7,7 @@ import "./Treasury.sol";
 /**
  * @title TBD
  * @notice TBD
- * @author Shivali Sharma @ Polygon Buidl Hackathon 2022 
+ * @author Shivali Sharma @ Polygon Buidl IT Hackathon 2022 
  **/
 
 contract Donations {	
