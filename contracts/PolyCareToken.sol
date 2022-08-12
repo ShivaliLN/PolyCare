@@ -4,9 +4,9 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 /**
- * @title TBD
- * @notice TBD
- * @author Shivali Sharma @ Polygon Buidl Hackathon 2022 
+ * @title PolyCareToken ERC20 for Governance
+ * @notice Users who did the donation will be minted with these token so they can participate in the governance and vote. 
+ * @author Shivali Sharma @ Polygon BUIDL IT Hackathon 2022 
  **/
 
 contract PolyCareToken is ERC20Votes {

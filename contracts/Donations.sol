@@ -5,9 +5,9 @@ import "./PolyCareToken.sol";
 import "./Treasury.sol";
 
 /**
- * @title TBD
- * @notice TBD
- * @author Shivali Sharma @ Polygon Buidl IT Hackathon 2022 
+ * @title Donations Contract
+ * @notice This contract accepts user donation and mint them token that will be used for Governance of the funds
+ * @author Shivali Sharma @ Polygon BUIDL IT Hackathon 2022 
  **/
 
 contract Donations {	
@@ -19,7 +19,7 @@ contract Donations {
 	PolyCareToken polycareToken;
     Treasury treasury;
   	address public admin;    
-    uint public price;
+    uint public value;
     uint public minPurchase;
     uint public maxPurchase;
     
@@ -30,17 +30,18 @@ contract Donations {
 	event Donate(address indexed user, uint256 amount);
     event DonateWithoutToken(address indexed user, uint256 amount);
 	
-	constructor(address _owner, uint _price) {
+	constructor(address _owner, uint _value) {
 		admin = _owner;
-        price = _price;
+        value = _value;
 	}
 
+    //User will get ERC20 tokens based on the donation amount
     function donate()
         payable
         external
         {
-        require(msg.value % price == 0, 'have to send a multiple of price');
-        uint quantity = msg.value / price ;
+        require(msg.value % value == 0, 'have to send a multiple of price');
+        uint quantity = msg.value / value ;
         require(quantity <= polycareToken.balanceOf(address(this)), 'Not enough tokens left');
 		if(donors[msg.sender]== true) {
 			Donation storage donor = donorQuantity[msg.sender];
@@ -58,6 +59,7 @@ contract Donations {
         emit Donate(msg.sender, msg.value);
     }
 
+    //Function to just receive donation
     function donateWithoutToken()
         payable
         external

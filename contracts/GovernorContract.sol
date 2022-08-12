@@ -9,9 +9,8 @@ import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.so
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
 
 /**
- * @title TBD
- * @notice TBD
- * @author Shivali Sharma @ Polygon Buidl Hackathon 2022 
+ * @title Goverance Contract to manage donations
+ * @author Shivali Sharma @ Polygon BUIDL IT Hackathon 2022 
  **/
 
 contract GovernorContract is

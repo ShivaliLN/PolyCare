@@ -8,9 +8,9 @@ import "contracts/Treasury.sol";
 import "contracts/Donations.sol";
 
 /**
- * @title TBD
- * @notice TBD
- * @author Shivali Sharma @ Polygon Buidl IT Hackathon 2022 
+ * @title PolyCareSVG NFT contract
+ * @notice Users who did the donation can mint NFT of any charity organization where the funds where given. SVG NFTs are dynamically created based on the charity organization name.
+ * @author Shivali Sharma @ Polygon BUIDL IT Hackathon 2022 
  **/
 
 library Base64 {
@@ -139,7 +139,7 @@ library Base64 {
 
 contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
     mapping(uint256 => Attr) public attributes;
-    mapping(address => bool) public userMinted;
+    mapping(address => mapping (uint=> bool)) public userMinted;
 
     struct Attr {
         string name; 
@@ -195,17 +195,23 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
         return super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @notice checkUpKeep will monitor if any new agreement has been created by 'CricNFTTeamAgreement.sol'
+     * @dev Register/Setup keepers on both Kovan and Polygon
+     * @param address to which NFT will be minted
+     * @param tokenId token id associated with Goverance Proposal for which funds where donated 
+    */
     function mint(
         address to, 
         uint256 tokenId
         ) 
     public {
-        require(userMinted[to]==false, "User already minted this NFT");
+        require(userMinted[to][tokenId]==false, "User already minted this NFT");
         require(donations.donors[to]==true, "User is not listed as a donor"); 
-        //require(id > 0, "Invalid Token Id"); MUST BE A VALID TOKEN ID
+        require(tresuary.isValidProposalId(tokenId) == true, "Invalid Token Id"); 
         _safeMint(to, tokenId);
         attributes[tokenId] = Attr(treasury.getIdInfo(tokenId));
-        userMinted[to]=true;
+        userMinted[to][tokenId]=true;
     }
 
     function getSvg(uint tokenId, string memory  _name) private pure returns (string memory) {

@@ -3,6 +3,11 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/governance/TimelockController.sol";
 
+/**
+ * @title Timelock contract for Treasury
+ * @author Shivali Sharma @ Polygon BUIDL IT Hackathon 2022 
+ **/
+
 contract TimeLock is TimelockController {
   // minDelay is how long you have to wait before executing
   // proposers is the list of addresses that can propose
