@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "contracts/Treasury.sol";
-import "contracts/Donations.sol";
+import "contracts/PolyCareMain.sol";
 
 /**
  * @title PolyCareSVG NFT contract
@@ -146,11 +146,11 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
     }
     
     Treasury treasury;
-    Donations donations;
+    PolyCareMain polyCareMain;
 
-    constructor(address payable _treasury, address payable _donations) ERC721("Polycare", "POLYC") {
+    constructor(address payable _treasury, address payable _polyCareMain) ERC721("Polycare", "POLYC") {
         treasury = Treasury(_treasury);  
-        donations = Donation(_donations);
+        polyCareMain = PolyCareMain(_polyCareMain);
     }
 
     function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
@@ -198,7 +198,7 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
     /**
      * @notice checkUpKeep will monitor if any new agreement has been created by 'CricNFTTeamAgreement.sol'
      * @dev Register/Setup keepers on both Kovan and Polygon
-     * @param address to which NFT will be minted
+     * @param to address to which NFT will be minted
      * @param tokenId token id associated with Goverance Proposal for which funds where donated 
     */
     function mint(
@@ -207,8 +207,8 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
         ) 
     public {
         require(userMinted[to][tokenId]==false, "User already minted this NFT");
-        require(donations.donors[to]==true, "User is not listed as a donor"); 
-        require(tresuary.isValidProposalId(tokenId) == true, "Invalid Token Id"); 
+        require(polyCareMain.isDonor(to)==true, "User is not listed as a donor"); 
+        require(treasury.isValidProposalId(tokenId) == true, "Invalid Token Id"); 
         _safeMint(to, tokenId);
         attributes[tokenId] = Attr(treasury.getIdInfo(tokenId));
         userMinted[to][tokenId]=true;

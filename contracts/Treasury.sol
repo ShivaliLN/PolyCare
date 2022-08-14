@@ -15,6 +15,7 @@ mapping (uint => string) public idName;
 uint[] public proposalId;
 
 event FundsReleased(uint ProposalID, address To, uint Amount);
+event Received(address, uint);
 
 //This contract with have function to release funds to oldage homes
   function releaseFunds(uint _proposalId, address payable _to, string calldata _name,uint _amount) public onlyOwner {
@@ -41,8 +42,12 @@ event FundsReleased(uint ProposalID, address To, uint Amount);
       return false;
   }
 
+  function contractBalance() public view returns(uint) {
+          return address(this).balance;
+    }
+
 receive() external payable {
-		
+		emit Received(msg.sender, msg.value);
 	}  
 
 }
