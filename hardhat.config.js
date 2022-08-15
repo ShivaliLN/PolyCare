@@ -18,9 +18,11 @@ module.exports = {
       allowUnlimitedContractSize: true
     }, 
     mumbai: {
+      chainId: 80001,
       url: POLYGON_RPC_URL,
       accounts: [PRIVATE_KEY],
       saveDeployments: true,
+      allowUnlimitedContractSize: true
   },     
 },
 etherscan: {
@@ -29,6 +31,13 @@ etherscan: {
 paths: {
   artifacts: './artifacts',
 },
-  solidity: "0.8.9",
-  
+  solidity: {
+    version:"0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000
+      }
+    }
+  }  
 };

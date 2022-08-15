@@ -2,6 +2,7 @@ const hre = require("hardhat");
 const { assert, expect } = require("chai");
 const { ethers } = require("hardhat");
 const { network } = require("hardhat");
+const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 const FUNC = "releaseFunds"
 const PROPOSAL_DESCRIPTION = "The charity Red Cross is willing to provide daycare services for the nearby orphange Little Feet located at 6th Street"
@@ -9,14 +10,20 @@ const QUORUM_PERCENTAGE = 4 // Need 4% of voters to pass
 const VOTING_PERIOD  = 5 // blocks
 const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
 const  MIN_DELAY = 3600 // 1 hour - after a vote passes, you have 1 hour before you can enact
-const ADDRESS_ZERO = "0x0000000000000000000000000000000000000078"
-let polyCareMain, governor, svgnft, erc20vote, timelock, treasury, owner, Alice, Bob, Tom
+
+let polyCareMain, governor, svgnft, nftContract ,timelock, treasury, owner, Alice, Bob, Tom
 
 describe("PolyCare Governor Flow", async () => {
   
   before(async () => {  
-    [owner, Alice, Bob, Tom, Charity] = await ethers.getSigners();
-
+    [owner, Alice, Bob, Tom, Charity, Executor] = await ethers.getSigners();
+    console.log("Owner" + owner.address)
+    console.log("Alice" + Alice.address)
+    console.log("Bob" + Bob.address)
+    console.log("Tom" + Tom.address)
+    console.log("Charity" + Charity.address)
+    console.log("Executor" + Executor.address)
+    console.log("----------------------------------------------------")
     const Treasury = await ethers.getContractFactory("Treasury");
     treasury = await Treasury.deploy();
     await treasury.deployed();
@@ -41,7 +48,12 @@ describe("PolyCare Governor Flow", async () => {
     svgnft = await Svgnft.deploy(treasury.address, polyCareMain.address);
     await svgnft.deployed();
     console.log("Svgnft deployed at: "+ svgnft.address);  
-    
+
+    const NftContract = await ethers.getContractFactory("PolyCareNFT");
+    nftContract = await NftContract.deploy(polyCareMain.address);
+    await nftContract.deployed();
+    console.log("NftContract deployed at: "+ nftContract.address); 
+
     console.log("----------------------------------------------------")
     console.log("Setting up contracts for roles...")
     // would be great to use multicall here...
@@ -51,7 +63,7 @@ describe("PolyCare Governor Flow", async () => {
   
     const proposerTx = await timelock.grantRole(proposerRole, governor.address)
     await proposerTx.wait(1)
-    const executorTx = await timelock.grantRole(executorRole, ADDRESS_ZERO)
+    const executorTx = await timelock.grantRole(executorRole, Executor.address)
     await executorTx.wait(1)
     const revokeTx = await timelock.revokeRole(adminRole, owner.address)
     await revokeTx.wait(1)
@@ -98,7 +110,11 @@ describe("PolyCare Governor Flow", async () => {
     let proposalState = await governor.state(proposalId)
     console.log("Proposal ID: " + proposalId)
     console.log(`Current Proposal State: ${proposalState}`)    
-
+    
+    // Bob delegate Alice
+    const voteTx1 = await polyCareMain.connect(Bob).delegate(Alice.address);
+    await voteTx1.wait(1) 
+    
     //await moveBlocks(VOTING_DELAY + 1)
     let amount = VOTING_DELAY + 1;
     for (let index = 0; index < amount; index++) {
@@ -107,11 +123,13 @@ describe("PolyCare Governor Flow", async () => {
         params: [],
       })
     }
-    console.log(`Moved ${amount} blocks`)
+    console.log(`Moved ${amount} blocks`)       
+   
+    
     // vote
     const voteWay = 1 // for
     const reason = "I support this cause"
-    const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason)
+    const voteTx = await governor.connect(Alice).castVoteWithReason(proposalId, voteWay, reason)
     await voteTx.wait(1)   
     
     proposalState = await governor.state(proposalId)
@@ -119,10 +137,7 @@ describe("PolyCare Governor Flow", async () => {
     console.log(`Current Proposal State: ${proposalState}`)
 
     console.log(await governor.proposalVotes(proposalId))
-    console.log()
     console.log(await governor.quorum(await hre.ethers.provider.getBlockNumber()-1))   
- 
-    /*
 
     //await moveBlocks(VOTING_PERIOD + 1)
     let amount2 = VOTING_PERIOD + 1;
@@ -132,17 +147,21 @@ describe("PolyCare Governor Flow", async () => {
         params: [],
       })
     }
-    console.log(`Moved ${amount2} blocks`)   
-
+    console.log(`Moved ${amount2} blocks: ` + await hre.ethers.provider.getBlockNumber())   
+    
     // queue & execute
     // const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION))
     const descriptionHash = ethers.utils.id(PROPOSAL_DESCRIPTION)
+    const saltHash = ethers.utils.id("")
     const queueTx = await governor.queue([treasury.address], [0], [encodedFunctionCall], descriptionHash)
     await queueTx.wait(1)
     //await moveTime(MIN_DELAY + 1)
     let amount3 = MIN_DELAY + 1
     await network.provider.send("evm_increaseTime", [amount3])
     console.log(`Moved forward in time ${amount3} seconds`)
+    
+    proposalState = await governor.state(proposalId)
+    console.log(`Current Proposal State: ${proposalState}`)
 
     //await moveBlocks(1)
     for (let index = 0; index < 1; index++) {
@@ -151,17 +170,21 @@ describe("PolyCare Governor Flow", async () => {
         params: [],
       })
     }
-    console.log(`Moved 1 block`)
-
+    console.log(`Moved 1 block: ` + await hre.ethers.provider.getBlockNumber())
+    //await time.increase(86400); 
 
     proposalState = await governor.state(proposalId)
     console.log(`Current Proposal State: ${proposalState}`)
-
+    
     console.log("Executing...")
-    console.log
-    const exTx = await governor.execute([treasury.address], [0], [encodedFunctionCall], descriptionHash)
-    await exTx.wait(1)
-    console.log(ethers.utils.formatEther(await Charity.getBalance()));
-    */
+    //const exTx = await timelock.connect(Executor).execute(treasury.address, 0, encodedFunctionCall, descriptionHash, saltHash)
+    //await exTx.wait(1)
+    console.log(ethers.utils.formatEther(await Charity.getBalance()));    
   }) 
+
+  it("Add NFT token and mint", async () => {
+    await nftContract.connect(Bob).addToken(1, 5000 ,"bafkreiacih2eghkctkooafekyj2wxox2ivpodwtnksrvs4utqg2kzdrsqa","QmV46tyKPs6qRnpDWYV9Dxd99CWPCcqw2oYsTGmYJ1nMc4");
+    await nftContract.connect(Bob).mint(1, 3)
+   })
+
 })
