@@ -5,7 +5,7 @@ const { network } = require("hardhat");
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
 
 const FUNC = "releaseFunds"
-const PROPOSAL_DESCRIPTION = "The charity Red Cross is willing to provide daycare services for the nearby orphange Little Feet located at 6th Street"
+const PROPOSAL_DESCRIPTION = "test"
 const QUORUM_PERCENTAGE = 4 // Need 4% of voters to pass
 const VOTING_PERIOD  = 5 // blocks
 const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
@@ -156,8 +156,8 @@ describe("PolyCare Governor Flow", async () => {
     const queueTx = await governor.queue([treasury.address], [0], [encodedFunctionCall], descriptionHash)
     await queueTx.wait(1)
     //await moveTime(MIN_DELAY + 1)
-    let amount3 = MIN_DELAY + 1
-    await network.provider.send("evm_increaseTime", [amount3])
+    let amount3 = MIN_DELAY + 1 + 1660573252
+    await network.provider.send("evm_increaseTime", [amount3]);
     console.log(`Moved forward in time ${amount3} seconds`)
     
     proposalState = await governor.state(proposalId)
@@ -166,9 +166,9 @@ describe("PolyCare Governor Flow", async () => {
     //await moveBlocks(1)
     for (let index = 0; index < 1; index++) {
       await network.provider.request({
-        method: "evm_mine",
-        params: [],
-      })
+       method: "evm_mine",
+       params: [],
+     })
     }
     console.log(`Moved 1 block: ` + await hre.ethers.provider.getBlockNumber())
     //await time.increase(86400); 
@@ -177,8 +177,8 @@ describe("PolyCare Governor Flow", async () => {
     console.log(`Current Proposal State: ${proposalState}`)
     
     console.log("Executing...")
-    //const exTx = await timelock.connect(Executor).execute(treasury.address, 0, encodedFunctionCall, descriptionHash, saltHash)
-    //await exTx.wait(1)
+    const exTx = await timelock.connect(Executor).execute(treasury.address, 0, encodedFunctionCall, descriptionHash, saltHash)
+    await exTx.wait(1)
     console.log(ethers.utils.formatEther(await Charity.getBalance()));    
   }) 
 
