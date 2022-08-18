@@ -9,10 +9,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 **/
 
 contract Treasury is Ownable {
+uint[] public proposalId;
+uint public totalDonationAmt;
+uint public releasedAmt;
 mapping (address => uint) public institutionAmount;
 mapping (uint => bool) public idPayment;
 mapping (uint => string) public idName;
-uint[] public proposalId;
 
 event FundsReleased(uint ProposalID, address To, uint Amount);
 event Received(address, uint);
@@ -28,6 +30,7 @@ event Received(address, uint);
     require(success, "Failed to send donation");
     institutionAmount[_to] += _amount;
     idName[_proposalId] = _name;
+    releasedAmt += _amount;
     emit FundsReleased(_proposalId, _to, _amount);
   }
 
@@ -47,6 +50,7 @@ event Received(address, uint);
     }
 
 receive() external payable {
+        totalDonationAmt +=msg.value;
 		emit Received(msg.sender, msg.value);
 	}  
 
