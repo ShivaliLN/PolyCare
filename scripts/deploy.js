@@ -1,6 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
+  /*
   // Contracts are deployed using the first signer/account by default
   const [owner] = await ethers.getSigners();
   //const price = hre.ethers.utils.parseEther("0.0001");
@@ -53,7 +54,15 @@ async function main() {
     //await executorTx.wait(1)
     //const revokeTx = await contract.revokeRole(adminRole, owner.address)
     //await revokeTx.wait(1) 
-   
+   */
+
+
+  const Contract5 = await ethers.getContractFactory("PolyCareSVG");
+  //contract5 = await Contract5.deploy(contract2.address);
+  contract5 = await Contract5.deploy("0xe50AAC0A78e2Ab8eB779089350c62538ADF047bD", "0x8264010c963636cBF0d6EE7C9Cc1977787FE07AB");
+  await contract5.deployed();
+  console.log("PolyCareSVG deployed at: "+ contract5.address); 
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
