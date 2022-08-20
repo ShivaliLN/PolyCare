@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  /*
+   /*
   // Contracts are deployed using the first signer/account by default
   const [owner] = await ethers.getSigners();
   //const price = hre.ethers.utils.parseEther("0.0001");
@@ -9,9 +9,10 @@ async function main() {
   //const maxAmount = hre.ethers.utils.parseEther("100");
   const  MIN_DELAY = 60 // 1 min - after a vote passes, you have 1 min before you can enact
   const QUORUM_PERCENTAGE = 4 // Need 4% of voters to pass
-  const VOTING_PERIOD  = 5 // blocks
+  const VOTING_PERIOD  = 5000 // blocks
   const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
 
+ 
   const Contract1 = await hre.ethers.getContractFactory("Treasury");
   const contract1 = await Contract1.deploy();
   await contract1.deployed();
@@ -32,8 +33,8 @@ async function main() {
   const contract4 = await Contract4.deploy("0x8264010c963636cBF0d6EE7C9Cc1977787FE07AB", "0xEA0B921e34de0DA41BC74929Abc9BDfd7bd4f5A8", QUORUM_PERCENTAGE, VOTING_PERIOD, VOTING_DELAY);
   await contract4.deployed();
   console.log("GovernorContract deployed at: "+ contract4.address); 
-
-  
+*/
+ /* 
   const Contract5 = await ethers.getContractFactory("PolyCareNFT");
   //contract5 = await Contract5.deploy(contract2.address);
   contract5 = await Contract5.deploy("0x8264010c963636cBF0d6EE7C9Cc1977787FE07AB");
@@ -54,8 +55,8 @@ async function main() {
     //await executorTx.wait(1)
     //const revokeTx = await contract.revokeRole(adminRole, owner.address)
     //await revokeTx.wait(1) 
-   */
-
+   
+*/
 
   const Contract5 = await ethers.getContractFactory("PolyCareSVG");
   //contract5 = await Contract5.deploy(contract2.address);

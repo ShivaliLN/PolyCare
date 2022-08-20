@@ -40,8 +40,9 @@ contract PolyCareMain is ERC20Votes {
         payable
         external
         {
-        require(msg.value % value == 0, 'have to send a multiple of price');
-        uint quantity = msg.value / value ;
+        //require(msg.value % value == 0, 'have to send a multiple of price');  //commenting for demo purpose ideally must have rules in place 
+        //uint quantity = msg.value / value ;
+        uint quantity = 10000;
         require(getTokenBalance() >= quantity, 'Not enough tokens left');
 		if(donors[msg.sender]== true) {
 			Donation storage donor = donorQuantity[msg.sender];

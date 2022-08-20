@@ -92,12 +92,12 @@ describe("PolyCare Governor Flow", async () => {
   })
 
   it("can only be changed through governance", async () => {
-    await expect(treasury.connect(Tom).releaseFunds(7, Bob.address, "test", ethers.utils.parseEther("3") )).to.be.revertedWith("Ownable: caller is not the owner")
+    await expect(treasury.connect(Tom).releaseFunds(Bob.address, "test", ethers.utils.parseEther("3") )).to.be.revertedWith("Ownable: caller is not the owner")
   })
 
   it("proposes, votes, waits, queues, and then executes", async () => {
     // propose
-    const encodedFunctionCall = treasury.interface.encodeFunctionData(FUNC, [7, Charity.address, "test", ethers.utils.parseEther("3")])
+    const encodedFunctionCall = treasury.interface.encodeFunctionData(FUNC, [Charity.address, "test", ethers.utils.parseEther("3")])
     const proposeTx = await governor.propose(
       [treasury.address],
       [0],
@@ -183,8 +183,8 @@ describe("PolyCare Governor Flow", async () => {
   }) 
 
   it("Add NFT token and mint", async () => {
-    await nftContract.connect(Bob).addToken(1, 5000 ,"bafkreiacih2eghkctkooafekyj2wxox2ivpodwtnksrvs4utqg2kzdrsqa","QmV46tyKPs6qRnpDWYV9Dxd99CWPCcqw2oYsTGmYJ1nMc4");
-    await nftContract.connect(Bob).mint(1, 3)
+    await nftContract.connect(Bob).addToken(5000 ,"QmV46tyKPs6qRnpDWYV9Dxd99CWPCcqw2oYsTGmYJ1nMc4");
+    await nftContract.connect(Bob).mint(1)
    })
 
 })

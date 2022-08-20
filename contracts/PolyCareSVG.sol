@@ -146,7 +146,7 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
         string material;
         uint8 speed;
         uint8 attack;
-        uint8 defence;  
+        uint8 defence; 
     }
     
     Treasury treasury;
@@ -212,8 +212,8 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
         require(polyCareMain.isDonor(msg.sender)==true, "User is not listed as a donor"); 
         //require(treasury.isValidProposalId(tokenId) == true, "Invalid Token Id"); 
         _safeMint(msg.sender, tokenId);
-        //attributes[tokenId] = Attr("Red Cross Charity", "Thank you for your donation to Polycare", 30); //Attr(treasury.getIdInfo(tokenId));
-        attributes[tokenId] = Attr("Red Cross Charity", "Donation", 1, 2, 3); //Attr(treasury.getIdInfo(tokenId));
+        attributes[tokenId] = Attr("Red Cross Charity", "Thank you for your donation to Polycare", 1, 2 , 3); //Attr(treasury.getIdInfo(tokenId));
+        //attributes[tokenId] = Attr("Red Cross Charity", "Thank you for your Donation"); //Attr(treasury.getIdInfo(tokenId));
         userMinted[msg.sender][tokenId]=true;
     }
 
@@ -236,8 +236,8 @@ contract PolyCareSVG is ERC721, ERC721Enumerable, Ownable {
                     '{"trait_type": "Material", "value": "', attributes[tokenId].material, '"}',
                     ']}'
                 )
-            ))
-        );
+            ))        
+       );
         return string(abi.encodePacked('data:application/json;base64,', json));
     }    
 }
