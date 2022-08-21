@@ -185,7 +185,7 @@ describe("PolyCare Governor Flow", async () => {
     console.log("Executing...")
     const exTx = await governor.execute([treasury.address], [0], [encodedFunctionCall], descriptionHash)
     await exTx.wait(1)
-    console.log(ethers.utils.formatEther(await Charity.getBalance()));    
+    console.log("Charity new balance: " + ethers.utils.formatEther(await Charity.getBalance()));    
   }) 
 
   it("Add NFT token and mint", async () => {
