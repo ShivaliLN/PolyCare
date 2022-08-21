@@ -84,7 +84,7 @@ contract PolyCareNFT is ERC1155 {
   @notice Function to allow users to query the remaining supply
   @param _tokenId uint
 **/
-    function querySupplyLeftRate(uint256 _tokenId) external view returns (uint _supply){
+    function querySupplyLeft(uint256 _tokenId) external view returns (uint _supply){
             uint index = _tokenId-1;
             _supply = supplies[index]-minted[index];
     } 

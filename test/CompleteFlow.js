@@ -9,7 +9,7 @@ const PROPOSAL_DESCRIPTION = "test"
 const QUORUM_PERCENTAGE = 4 // Need 4% of voters to pass
 const VOTING_PERIOD  = 5 // blocks
 const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
-const  MIN_DELAY = 3600 // 1 hour - after a vote passes, you have 1 hour before you can enact
+const  MIN_DELAY = 1 //  How long do we have to wait until we can execute after a passed proposal
 
 let polyCareMain, governor, svgnft, nftContract ,timelock, treasury, owner, Alice, Bob, Tom
 
@@ -63,10 +63,14 @@ describe("PolyCare Governor Flow", async () => {
   
     const proposerTx = await timelock.grantRole(proposerRole, governor.address)
     await proposerTx.wait(1)
-    const executorTx = await timelock.grantRole(executorRole, Executor.address)
+    const executorTx = await timelock.grantRole(executorRole, governor.address)
     await executorTx.wait(1)
+    const transferOwnership = await treasury.connect(owner).transferOwnership(timelock.address)
+    await transferOwnership.wait(1)
     const revokeTx = await timelock.revokeRole(adminRole, owner.address)
     await revokeTx.wait(1)
+
+    
 
   })
 
@@ -84,6 +88,8 @@ describe("PolyCare Governor Flow", async () => {
     await polyCareMain.connect(Bob).donateWithoutToken({value: ethers.utils.parseEther("3")})
     console.log("Bob token balance: " + await polyCareMain.balanceOf(Bob.address))
     console.log("Treasury balance: " + await treasury.contractBalance())
+    console.log("Demand" + ethers.utils.parseEther("3"))
+    console.log("Treasury Owner" + await treasury.owner())
     
   })
 
@@ -177,7 +183,7 @@ describe("PolyCare Governor Flow", async () => {
     console.log(`Current Proposal State: ${proposalState}`)
     
     console.log("Executing...")
-    const exTx = await timelock.connect(Executor).execute(treasury.address, 0, encodedFunctionCall, descriptionHash, saltHash)
+    const exTx = await governor.execute([treasury.address], [0], [encodedFunctionCall], descriptionHash)
     await exTx.wait(1)
     console.log(ethers.utils.formatEther(await Charity.getBalance()));    
   }) 

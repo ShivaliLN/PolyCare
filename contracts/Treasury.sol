@@ -14,7 +14,7 @@ uint public totalDonationAmt;
 uint public releasedAmt;
 mapping (address => uint) public institutionAmount;
 mapping (uint => bool) public idPayment;
-mapping (uint => string) public idName;
+mapping (uint => string) public idName;   // This will be used in SVG minting
 
 event FundsReleased(uint ProposalID, address To, uint Amount);
 event Received(address, uint);

@@ -16,7 +16,7 @@ contract PolyCareMain is ERC20Votes {
         address donor;
         uint quantity;
     }
-  uint256 public s_maxSupply = 10e25; // 100M
+  uint public s_maxSupply = 10e25; // 100M
   uint public currentSupply;
   uint public value;
   uint public minPurchase;
@@ -35,14 +35,14 @@ contract PolyCareMain is ERC20Votes {
     treasury = Treasury(_treasury);
   }
 
-  //User will get ERC20 tokens based on the donation amount
+  //User will get ERC20 tokens based on the donation amount (For testing purpose made the amount to 10000)
     function donate()
         payable
         external
         {
         //require(msg.value % value == 0, 'have to send a multiple of price');  //commenting for demo purpose ideally must have rules in place 
         //uint quantity = msg.value / value ;
-        uint quantity = 10000;
+        uint quantity = 10000 ether;
         require(getTokenBalance() >= quantity, 'Not enough tokens left');
 		if(donors[msg.sender]== true) {
 			Donation storage donor = donorQuantity[msg.sender];
@@ -56,11 +56,13 @@ contract PolyCareMain is ERC20Votes {
 		donorQuantity[msg.sender]= Donation(msg.sender,quantity);
 		}
         console.log(address(this).balance);
+        if(address(this).balance > 0){
         (bool success, ) = address(treasury).call{value: address(this).balance}("");
         require(success, "Failed to transfer to treasury");
          _mint(msg.sender, quantity);
          currentSupply += quantity;
         emit Donate(msg.sender, msg.value);
+        }
     }
 
     //Function to just receive donation
