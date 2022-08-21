@@ -2,7 +2,7 @@
 
 ## Overview
 
-**PolyCare**, is the first fully decentralized **charity & fundraising** application which is focused on two main aspects:
+**PolyCare** is the first fully decentralized **charity & fundraising** application which is focused on two main aspects:
 
 1. Bringing **orphanages and oldage homes** together by providing financial assistance to Oldage homes who are willing to provide daycare/childcare services to orphanages.
 2. It is also a **Web3 version of https://www.ketto.org/ Web2 platform** where if you have donated to the protocol, you can start a proposal for raising funds for any medical treatment or other causes.
@@ -19,9 +19,9 @@ PolyCare aims to provide a platform where you can donate funds and participate i
 
 ## How it works
 
-- Step 1 - Under **Donation** tab - Donate to PolyCare as little as 0.0001 Matic. You can choose if you wish to participate in the Governance Protocol. If yes, you will be minted PolycareToken(PCT) tokens depending upon your donation amount.
+- Step 1 - Under **Donate** tab - Donate to PolyCare as little as 0.0001 Matic. You can choose if you wish to participate in the Governance Protocol. If yes, PolycareToken(PCT) tokens will be minted depending upon your donation amount.
 
-- Step 2 - Under **Governance** tab - users with 25000 or more Polycare Tokens can create a proposal (assumption is you or someone you know volunteers and works with the Oldage Homes and Orphanage is your area, determine the expenditure amount and submit proposal with **supporting documents**)
+- Step 2 - Under **Governance** tab - users with certain amount of Polycare Tokens can create a proposal (assumption is you or someone you know volunteers and works with the Oldage Homes and Orphanage is your area, determine the expenditure amount and submit proposal with **supporting documents**)
 - Step 3 - Proposal goes through governance process where users with PCT token can delegate vote to someone or themself and participate in governance.
 - Step 4 - If the proposal is passed, funds are released to the Oldage home.
 
