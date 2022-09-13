@@ -91,10 +91,6 @@ PolyCare Architecture
 - NFTContract deployed at: https://mumbai.polygonscan.com/address/0xc791e3E5Ae44172Fe79FF670b1554Ab92160B151
 - PolyCareSVG deployed at: https://mumbai.polygonscan.com/address/0xFe5f4b8531C69F2B30388fAaD3dF99a14d0D997b
 
-## DApp hosted here
-
-https://hqxotfxpqma0.usemoralis.com
-
 # Run test from local
 
     git clone https://github.com/ShivaliLN/PolyCare.git
